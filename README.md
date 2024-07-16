@@ -1,6 +1,6 @@
-# Admin Page Dev
+# Search Algorithm Dev
 
-- 어드민 페이지 공부 및 개발
+- 검색 알고리즘 구현 
 
 ## Package manager
 
