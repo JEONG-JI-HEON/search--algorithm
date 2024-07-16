@@ -8,11 +8,12 @@ const { Search } = Input;
 
 const App = () => {
   const [options, setOptions] = useState([]);
+  const [nowSearch, setNowSearch] = useState();
 
   const onSearch = (value, _e, info) => {
-    console.log(value);
-    console.log(_e);
-    console.log(info);
+    // console.log(value);
+    // console.log(_e);
+    // console.log(info);
   };
 
   const getInitial = (char) => {
@@ -63,6 +64,8 @@ const App = () => {
     "aaa",
   ];
 
+  // let wordList = [];
+
   const getWordData = async (keyword) => {
     const client_id = "7DNwi7pmfr4ujhzlilNS";
     const client_secret = "GWrvJT5l6V";
@@ -82,10 +85,12 @@ const App = () => {
 
   const handleSearch = (value) => {
     // 검색어를 기반으로 관련 검색어를 생성합니다.
+    setNowSearch(value);
+
     if (value) {
-      console.log(value[0]);
+      // console.log(value[0]);
       const initial = getInitial(value[0]);
-      console.log(initial);
+      // console.log(initial);
       const filteredWords = wordList.filter((word) => getInitial(word[0]) === initial);
       setOptions(filteredWords.map((word) => ({ value: word })));
     } else {
@@ -94,9 +99,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    console.log(options);
-    getWordData("가능");
-  }, [options]);
+    console.log(nowSearch);
+    if (nowSearch) {
+      // wordList.length = 0;
+      getWordData(nowSearch);
+    }
+  }, [nowSearch]);
 
   return (
     <Space direction="vertical">
