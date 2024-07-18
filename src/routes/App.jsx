@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { AudioOutlined } from "@ant-design/icons";
-import { Input, Space, AutoComplete } from "antd";
+import { AutoComplete, Input, Space } from "antd";
 import axios from "axios";
+
+import { getJson } from "serpapi";
 
 const { Search } = Input;
 
@@ -48,39 +49,47 @@ const App = () => {
     return initialList[Math.floor((uniCode - initialOffset) / 588)];
   };
 
-  const wordList = [
-    "가나다",
-    "가구",
-    "가까이",
-    "가끔",
-    "가난",
-    "가시",
-    "가을",
-    "가정",
-    "가족",
-    "가치",
-    "니은",
-    "디듣",
-    "aaa",
-  ];
+  // const wordList = [
+  //   "가나다",
+  //   "가구",
+  //   "가까이",
+  //   "가끔",
+  //   "가난",
+  //   "가시",
+  //   "가을",
+  //   "가정",
+  //   "가족",
+  //   "가치",
+  //   "니은",
+  //   "디듣",
+  //   "aaa",
+  // ];
 
-  // let wordList = [];
+  let wordList = [];
 
-  const getWordData = async (keyword) => {
-    const client_id = "7DNwi7pmfr4ujhzlilNS";
-    const client_secret = "GWrvJT5l6V";
-
-    const url = "/v1/search/encyc.json";
-    const option = {
-      params: { query: keyword },
+  const searchGoogle = async (keyword) => {
+    const url = "/v2/search.json";
+    const options = {
+      params: {
+        engine: "google_autocomplete",
+        q: keyword,
+        hl: "ko", // 한국
+        gl: "kr", // 한국
+        api_key: "9441f6581bcbab3b38ee92c13aa12b1f0e0c003d53f3ca9d6a32dc2f13f0f5eb",
+      },
       headers: {
         "Content-Type": "application/json",
-        "X-Naver-Client-Id": client_id,
-        "X-Naver-Client-Secret": client_secret,
       },
     };
-    const response = await axios.get(url, option);
-    console.log(response.data);
+
+    try {
+      const response = await axios.get(url, options);
+      const suggestions = response.data.suggestions;
+      wordList = suggestions.map((item) => item.value);
+      console.log(wordList);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleSearch = (value) => {
@@ -101,8 +110,9 @@ const App = () => {
   useEffect(() => {
     console.log(nowSearch);
     if (nowSearch) {
-      // wordList.length = 0;
-      getWordData(nowSearch);
+      wordList.length = 0;
+      // getWordData(nowSearch);
+      searchGoogle(nowSearch);
     }
   }, [nowSearch]);
 
